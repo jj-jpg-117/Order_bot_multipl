@@ -4,6 +4,7 @@ import edu.unicauca.orderbot_multi.data.PedidoRepository
 import edu.unicauca.orderbot_multi.model.Catalogo
 import edu.unicauca.orderbot_multi.model.ItemPedido
 import edu.unicauca.orderbot_multi.model.MetodoPago
+import edu.unicauca.orderbot_multi.model.PedidoGuardado
 import edu.unicauca.orderbot_multi.model.Producto
 import edu.unicauca.orderbot_multi.model.ResumenPedido
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,6 +29,10 @@ class PedidoViewModel(private val repositorio: PedidoRepository) : ViewModelObse
     private val _mensajeError = MutableStateFlow<String?>(null)
     val mensajeError: StateFlow<String?> = _mensajeError.asStateFlow()
 
+    /** Historial leído de SQLite; se refresca al confirmar cada pedido. */
+    private val _historial = MutableStateFlow(repositorio.listarPedidos())
+    val historial: StateFlow<List<PedidoGuardado>> = _historial.asStateFlow()
+
     val resumen: ResumenPedido get() = ResumenPedido(_items.value)
 
     // Getters con tipo concreto para el puente Swift/Objective-C.
@@ -36,6 +41,13 @@ class PedidoViewModel(private val repositorio: PedidoRepository) : ViewModelObse
     fun metodoPagoActual(): MetodoPago = _metodoPago.value
     fun guardandoActual(): Boolean = _guardando.value
     fun mensajeErrorActual(): String? = _mensajeError.value
+    fun historialActual(): List<PedidoGuardado> = _historial.value
+
+    /** Vuelve a leer la base de datos (por ejemplo al abrir el historial). */
+    fun cargarHistorial() {
+        _historial.value = repositorio.listarPedidos()
+        notificarCambios()
+    }
 
     /** Suma una unidad del producto (o lo agrega con cantidad 1). */
     fun agregar(producto: Producto) {
@@ -87,6 +99,7 @@ class PedidoViewModel(private val repositorio: PedidoRepository) : ViewModelObse
         notificarCambios()
         return try {
             val numero = repositorio.guardarPedido(resumen, _direccion.value, _metodoPago.value)
+            _historial.value = repositorio.listarPedidos()
             _items.value = emptyList()
             _direccion.value = ""
             _metodoPago.value = MetodoPago.EFECTIVO

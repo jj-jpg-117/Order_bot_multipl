@@ -33,6 +33,7 @@ import edu.unicauca.orderbot_multi.model.ModoTema
 fun PantallaInicio(
     onComenzar: () -> Unit,
     onVerCreditos: () -> Unit,
+    onVerHistorial: () -> Unit,
     modoTema: ModoTema,
     onCambiarTema: () -> Unit,
 ) {
@@ -97,5 +98,9 @@ fun PantallaInicio(
         Spacer(Modifier.height(10.dp))
 
         BotonSecundario(texto = stringResource(R.string.inicio_boton_creditos), onClick = onVerCreditos)
+
+        Spacer(Modifier.height(10.dp))
+
+        BotonSecundario(texto = stringResource(R.string.inicio_boton_historial), onClick = onVerHistorial)
     }
 }

@@ -25,3 +25,14 @@ VALUES (?, ?, ?, ?, ?, ?, ?);
 insertarItem:
 INSERT INTO itemPedido(productoId, cantidad, pedidoNumero)
 VALUES (?, ?, ?);
+
+listarPedidos:
+SELECT numeroPedido, direccion, metodoPago, subtotal, costoEnvio, total, fechaMillis
+FROM pedido
+ORDER BY fechaMillis DESC, numeroPedido DESC;
+
+itemsDePedido:
+SELECT id, productoId, cantidad, pedidoNumero
+FROM itemPedido
+WHERE pedidoNumero = ?
+ORDER BY id ASC;

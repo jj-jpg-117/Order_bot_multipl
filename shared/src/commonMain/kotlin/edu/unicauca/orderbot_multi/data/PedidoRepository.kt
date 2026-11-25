@@ -1,7 +1,10 @@
 package edu.unicauca.orderbot_multi.data
 
 import edu.unicauca.orderbot_multi.db.OrderBotDatabase
+import edu.unicauca.orderbot_multi.model.Catalogo
+import edu.unicauca.orderbot_multi.model.ItemPedido
 import edu.unicauca.orderbot_multi.model.MetodoPago
+import edu.unicauca.orderbot_multi.model.PedidoGuardado
 import edu.unicauca.orderbot_multi.model.ResumenPedido
 import kotlinx.datetime.Clock
 
@@ -46,4 +49,24 @@ class PedidoRepository(private val driverFactory: DatabaseDriverFactory) {
 
         return numero
     }
+
+    /** Pedidos guardados, de más reciente a más antiguo, con sus ítems. */
+    fun listarPedidos(): List<PedidoGuardado> =
+        queries.listarPedidos().executeAsList().map { fila ->
+            val items = queries.itemsDePedido(fila.numeroPedido).executeAsList().mapNotNull { item ->
+                Catalogo.porId(item.productoId)?.let { producto ->
+                    ItemPedido(producto = producto, cantidad = item.cantidad.toInt())
+                }
+            }
+            PedidoGuardado(
+                numeroPedido = fila.numeroPedido.toInt(),
+                direccion = fila.direccion,
+                metodoPago = MetodoPago.desdeRaw(fila.metodoPago),
+                subtotal = fila.subtotal.toInt(),
+                costoEnvio = fila.costoEnvio.toInt(),
+                total = fila.total.toInt(),
+                fechaMillis = fila.fechaMillis,
+                items = items,
+            )
+        }
 }

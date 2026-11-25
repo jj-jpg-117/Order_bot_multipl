@@ -1,6 +1,7 @@
 package edu.unicauca.orderbot_multi.android.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.navigation.NavType
@@ -13,6 +14,7 @@ import edu.unicauca.orderbot_multi.android.ui.pantallas.PantallaConfirmacion
 import edu.unicauca.orderbot_multi.android.ui.pantallas.PantallaConversacion
 import edu.unicauca.orderbot_multi.android.ui.pantallas.PantallaCreditos
 import edu.unicauca.orderbot_multi.android.ui.pantallas.PantallaEntrega
+import edu.unicauca.orderbot_multi.android.ui.pantallas.PantallaHistorial
 import edu.unicauca.orderbot_multi.android.ui.pantallas.PantallaInicio
 import edu.unicauca.orderbot_multi.android.ui.pantallas.PantallaRecomendacion
 import edu.unicauca.orderbot_multi.android.ui.pantallas.PantallaResumen
@@ -27,6 +29,7 @@ object Rutas {
     const val RESUMEN = "resumen"
     const val CONFIRMACION = "confirmacion/{numeroPedido}"
     const val CREDITOS = "creditos"
+    const val HISTORIAL = "historial"
 
     fun confirmacion(numeroPedido: Int): String = "confirmacion/$numeroPedido"
 }
@@ -48,6 +51,7 @@ fun NavegacionOrderBot(container: OrderBotContainer) {
     val metodoPago by pedidoViewModel.metodoPago.collectAsState()
     val mensajeError by pedidoViewModel.mensajeError.collectAsState()
     val guardando by pedidoViewModel.guardando.collectAsState()
+    val historial by pedidoViewModel.historial.collectAsState()
     val modoTema by temaViewModel.modoTema.collectAsState()
 
     // El resumen se deriva del estado observado, nunca de StateFlow.value.
@@ -60,6 +64,7 @@ fun NavegacionOrderBot(container: OrderBotContainer) {
             PantallaInicio(
                 onComenzar = { navController.navigate(Rutas.CONVERSACION) },
                 onVerCreditos = { navController.navigate(Rutas.CREDITOS) },
+                onVerHistorial = { navController.navigate(Rutas.HISTORIAL) },
                 modoTema = modoTema,
                 onCambiarTema = cambiarTema,
             )
@@ -134,6 +139,18 @@ fun NavegacionOrderBot(container: OrderBotContainer) {
                         popUpTo(navController.graph.startDestinationId) { inclusive = true }
                     }
                 },
+                onVerHistorial = { navController.navigate(Rutas.HISTORIAL) },
+                modoTema = modoTema,
+                onCambiarTema = cambiarTema,
+            )
+        }
+
+        composable(Rutas.HISTORIAL) {
+            // Relee SQLite cada vez que se abre, por si hubo pedidos desde otra sesión.
+            LaunchedEffect(Unit) { pedidoViewModel.cargarHistorial() }
+            PantallaHistorial(
+                pedidos = historial,
+                onVolver = { navController.popBackStack() },
                 modoTema = modoTema,
                 onCambiarTema = cambiarTema,
             )

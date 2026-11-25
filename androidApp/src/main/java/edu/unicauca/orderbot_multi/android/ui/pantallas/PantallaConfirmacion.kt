@@ -33,6 +33,7 @@ import edu.unicauca.orderbot_multi.model.ModoTema
 fun PantallaConfirmacion(
     numeroPedido: Int,
     onVolverInicio: () -> Unit,
+    onVerHistorial: () -> Unit,
     modoTema: ModoTema,
     onCambiarTema: () -> Unit,
 ) {
@@ -113,6 +114,13 @@ fun PantallaConfirmacion(
         BotonPrimario(
             texto = stringResource(R.string.confirmacion_boton_seguir),
             onClick = {},
+        )
+
+        Spacer(Modifier.height(10.dp))
+
+        BotonSecundario(
+            texto = stringResource(R.string.confirmacion_boton_historial),
+            onClick = onVerHistorial,
         )
 
         Spacer(Modifier.height(10.dp))
