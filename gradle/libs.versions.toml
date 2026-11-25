@@ -7,6 +7,7 @@ navigationCompose = "2.8.5"
 lifecycle = "2.8.7"
 coroutines = "1.9.0"
 serialization = "1.7.1"
+datetime = "0.6.1"
 multiplatformSettings = "1.2.0"
 sqldelight = "2.0.2"
 
@@ -17,6 +18,7 @@ kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-c
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "datetime" }
 multiplatform-settings = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatformSettings" }
 sqldelight-runtime = { module = "app.cash.sqldelight:runtime", version.ref = "sqldelight" }
 sqldelight-coroutines-extensions = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqldelight" }

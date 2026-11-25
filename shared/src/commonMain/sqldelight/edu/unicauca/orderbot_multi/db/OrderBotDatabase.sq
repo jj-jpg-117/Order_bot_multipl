@@ -1,0 +1,27 @@
+CREATE TABLE pedido (
+    numeroPedido INTEGER NOT NULL UNIQUE,
+    direccion TEXT NOT NULL,
+    metodoPago TEXT NOT NULL,
+    subtotal INTEGER NOT NULL,
+    costoEnvio INTEGER NOT NULL,
+    total INTEGER NOT NULL,
+    fechaMillis INTEGER NOT NULL
+);
+
+CREATE TABLE itemPedido (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    productoId TEXT NOT NULL,
+    cantidad INTEGER NOT NULL,
+    pedidoNumero INTEGER NOT NULL REFERENCES pedido(numeroPedido) ON DELETE CASCADE
+);
+
+ultimoNumero:
+SELECT COALESCE(MAX(numeroPedido), 0) FROM pedido;
+
+insertarPedido:
+INSERT INTO pedido(numeroPedido, direccion, metodoPago, subtotal, costoEnvio, total, fechaMillis)
+VALUES (?, ?, ?, ?, ?, ?, ?);
+
+insertarItem:
+INSERT INTO itemPedido(productoId, cantidad, pedidoNumero)
+VALUES (?, ?, ?);
