@@ -8,3 +8,30 @@ captures
 .cxx
 local.properties
 xcuserdata
+
+# Kotlin / Java
+.kotlin/
+*.class
+
+# Android / firmas
+*.jks
+*.keystore
+debug.keystore
+
+# Xcode
+DerivedData/
+iosApp/DerivedData/
+*.xcuserstate
+*.xcscmblueprint
+*.xccheckout
+project.xcworkspace/
+xcuserdata/
+
+# CocoaPods / Swift Package Manager
+iosApp/Pods/
+.swiftpm/
+
+# Logs y macOS
+*.log
+.AppleDouble
+LSOverride
